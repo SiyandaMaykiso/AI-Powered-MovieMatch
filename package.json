@@ -1,0 +1,20 @@
+{
+  "name": "ai-powered-moviematch",
+  "version": "1.0.0",
+  "description": "AI-Powered MovieMatch is a web application that recommends movies tailored to user preferences using **machine learning algorithms**. The project combines collaborative and content-based filtering techniques to provide personalized movie suggestions. Built with **React.js** for the frontend, **Node.js** for the backend, and **PostgreSQL** hosted on Heroku, this project is a showcase of modern web development integrated with machine learning.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jwt-simple": "^0.5.6",
+    "pg": "^8.13.1"
+  }
+}
