@@ -1,16 +1,17 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const pool = require('../config/db');
+const User = require('../models/User');
 
 const register = async (req, res) => {
     const { username, password } = req.body;
     try {
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await pool.query(
-            'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *',
-            [username, hashedPassword]
-        );
-        res.json(result.rows[0]);
+
+        // Use the User model to create a new user
+        const user = await User.createUser(username, hashedPassword);
+
+        res.json(user);
     } catch (err) {
         console.error('Error registering user:', err);
         res.status(500).json({ error: 'Failed to register user' });
@@ -20,10 +21,11 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { username, password } = req.body;
     try {
-        const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-        const user = result.rows[0];
+        // Use the User model to find the user by username
+        const user = await User.getUserByUsername(username);
 
         if (user && (await bcrypt.compare(password, user.password))) {
+            // Generate a JWT token
             const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
             res.json({ token });
         } else {
