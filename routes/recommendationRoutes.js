@@ -1,5 +1,5 @@
 const express = require('express');
-const { getMovies, saveRating, addMovie } = require('../controllers/recommendationController');
+const { getMovies, saveRating, addMovie, recommendMovies } = require('../controllers/recommendationController');
 const router = express.Router();
 
 // Get all movies
@@ -10,5 +10,8 @@ router.post('/movies', addMovie);
 
 // Save a rating
 router.post('/rate', saveRating);
+
+// Recommend movies for a user
+router.get('/recommend/:userId', recommendMovies);
 
 module.exports = router;
