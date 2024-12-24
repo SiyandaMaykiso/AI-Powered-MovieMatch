@@ -1,0 +1,24 @@
+.
+├── Procfile
+├── README.md
+├── config
+│   └── db.js
+├── controllers
+│   ├── authController.js
+│   └── recommendationController.js
+├── index.js
+├── middlewares
+│   └── authMiddleware.js
+├── models
+│   ├── Movie.js
+│   ├── Rating.js
+│   ├── Recommendation.js
+│   └── User.js
+├── package-lock.json
+├── package.json
+├── project-structure.txt
+└── routes
+    ├── authRoutes.js
+    └── recommendationRoutes.js
+
+6 directories, 16 files
