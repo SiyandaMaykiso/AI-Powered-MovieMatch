@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 import pandas as pd
-import random
 
 app = FastAPI()
 
@@ -11,10 +10,12 @@ questionnaire_path = "/Users/siyandamayekiso/Documents/2024 React PostgreSQL Pro
 def get_questionnaire():
     try:
         # Load the questionnaire data
+        print("Loading questionnaire movies...")
         questionnaire = pd.read_csv(questionnaire_path)
         
-        # Randomly select 10 movies (adjustable)
-        movies_to_rate = questionnaire.sample(n=10).to_dict(orient="records")
+        # Return the complete questionnaire
+        movies_to_rate = questionnaire[["movie_id", "title", "genres"]].to_dict(orient="records")
+        print("Questionnaire loaded successfully!")
         return {"movies": movies_to_rate}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading questionnaire: {str(e)}")

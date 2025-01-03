@@ -44,27 +44,47 @@ print("Filtering movies from the last 47 years...")
 current_year = datetime.now().year
 movies = movies[movies["year"] >= current_year - 47]
 
-# Step 6: Select top movies by genre without repeats
-print("Selecting top movies by genre...")
+# Step 6: Select top movies by genre, avoiding franchise repetitions
+print("Selecting top movies by genre, avoiding franchise repetitions...")
 top_movies_by_genre = []
-selected_movie_ids = set()
 unique_genres = set(
     genre for genres in movies["genres"].dropna() for genre in genres.split("|")
 )
 
+selected_movie_ids = set()
+franchise_keywords = ["Star Wars", "Matrix", "Lord of the Rings", "Indiana Jones"]
+
+def is_franchise_duplicate(title):
+    for keyword in franchise_keywords:
+        if keyword.lower() in title.lower():
+            return True
+    return False
+
 for genre in unique_genres:
     genre_movies = movies[
-        movies["genres"].str.contains(genre, na=False) & ~movies["movie_id"].isin(selected_movie_ids)
+        (movies["genres"].str.contains(genre, na=False)) &
+        (~movies["movie_id"].isin(selected_movie_ids))  # Exclude already selected movies
     ]
-    top_movies = genre_movies.sort_values("weighted_rating", ascending=False).head(3)
-    selected_movie_ids.update(top_movies["movie_id"].tolist())
-    top_movies_by_genre.extend(top_movies.values.tolist())
+
+    # Sort by weighted rating
+    sorted_genre_movies = genre_movies.sort_values("weighted_rating", ascending=False)
+
+    # Filter out franchises
+    sorted_genre_movies = sorted_genre_movies[
+        ~sorted_genre_movies["title"].apply(is_franchise_duplicate)
+    ]
+
+    # Select top movie per genre
+    if not sorted_genre_movies.empty:
+        top_movie = sorted_genre_movies.head(1)
+        top_movies_by_genre.extend(top_movie.values.tolist())
+        selected_movie_ids.add(top_movie.iloc[0]["movie_id"])
 
 # Create a DataFrame of selected movies
 questionnaire_movies = pd.DataFrame(top_movies_by_genre, columns=movies.columns)
 
-# Deduplicate and limit the total number of movies (e.g., 20 movies)
-questionnaire_movies = questionnaire_movies.drop_duplicates(subset=["movie_id"]).head(20)
+# Limit the total number of movies (e.g., 20 movies)
+questionnaire_movies = questionnaire_movies.head(20)
 
 # Step 7: Save the questionnaire to a file
 output_path = "/Users/siyandamayekiso/Documents/2024 React PostgreSQL Projects/AI-Powered MovieMatch/data/ml-latest-small/questionnaire_movies.csv"

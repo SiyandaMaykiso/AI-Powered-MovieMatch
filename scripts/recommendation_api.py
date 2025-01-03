@@ -56,7 +56,11 @@ def get_recommendations(request: RecommendationRequest):
     # Fetch movie titles
     movie_titles = pd.read_csv("/Users/siyandamayekiso/Documents/2024 React PostgreSQL Projects/AI-Powered MovieMatch/data/ml-latest-small/moviesupdated.csv")
     results = [
-        {"movie_id": movie, "title": movie_titles[movie_titles["movie_id"] == movie]["title"].values[0], "predicted_rating": rating}
+        {
+            "movie_id": int(movie),  # Ensure movie_id is a Python int
+            "title": str(movie_titles[movie_titles["movie_id"] == movie]["title"].values[0]),
+            "predicted_rating": float(rating)  # Ensure rating is a Python float
+        }
         for movie, rating in top_recommendations
     ]
 
