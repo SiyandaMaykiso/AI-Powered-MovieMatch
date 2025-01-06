@@ -1,0 +1,145 @@
+/* Questionnaire.css */
+
+/* General container styling */
+.questionnaire-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header styling */
+  .questionnaire-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .questionnaire-header h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+  }
+  
+  .questionnaire-header p {
+    font-size: 1rem;
+    color: #7f8c8d;
+  }
+  
+  /* Movie list styling */
+  .movie-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Individual movie card styling */
+  .movie-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Movie title styling */
+  .movie-card h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin: 0 0 10px 0;
+  }
+  
+  /* Movie genre styling */
+  .movie-card p {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin: 5px 0;
+  }
+  
+  /* Rating input styling */
+  .rating-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .rating-input label {
+    margin-right: 10px;
+    font-size: 1rem;
+    color: #2c3e50;
+  }
+  
+  .rating-input select {
+    padding: 5px 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f7f7f7;
+    color: #333;
+  }
+  
+  /* Submit button styling */
+  .submit-button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Loading and error messages */
+  .loading,
+  .error-message {
+    text-align: center;
+    font-size: 1rem;
+    color: #e74c3c;
+    margin: 20px 0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .questionnaire-header h1 {
+      font-size: 1.8rem;
+    }
+  
+    .movie-card h2 {
+      font-size: 1.3rem;
+    }
+  
+    .movie-card p {
+      font-size: 0.9rem;
+    }
+  
+    .rating-input label {
+      font-size: 0.9rem;
+    }
+  
+    .rating-input select {
+      font-size: 0.9rem;
+    }
+  
+    .submit-button {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+  }

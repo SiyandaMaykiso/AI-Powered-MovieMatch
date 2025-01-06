@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Recommendations.css';
 
 const Recommendations = () => {
   const [userId, setUserId] = useState('');
