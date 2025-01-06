@@ -4,11 +4,20 @@
   "description": "AI-Powered MovieMatch is a web application that recommends movies tailored to user preferences using **machine learning algorithms**. The project combines collaborative and content-based filtering techniques to provide personalized movie suggestions. Built with **React.js** for the frontend, **Node.js** for the backend, and **PostgreSQL** hosted on Heroku, this project is a showcase of modern web development integrated with machine learning.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "concurrently \"npm run start-backend\" \"npm run start-client\"",
+    "start-backend": "cd backend && nodemon index.js",
+    "start-client": "cd client && npm start",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["AI", "Movie Recommendations", "Machine Learning", "React", "Node.js", "PostgreSQL"],
+  "keywords": [
+    "AI",
+    "Movie Recommendations",
+    "Machine Learning",
+    "React",
+    "Node.js",
+    "PostgreSQL"
+  ],
   "author": "Siyanda Mayekiso",
   "license": "ISC",
   "dependencies": {
@@ -20,6 +29,7 @@
     "pg": "^8.13.1"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "nodemon": "^3.0.1"
   }
 }
