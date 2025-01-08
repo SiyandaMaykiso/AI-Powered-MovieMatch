@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Questionnaire.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:3001';
+
 const Questionnaire = () => {
   const [movies, setMovies] = useState([]);
   const [ratings, setRatings] = useState({});
@@ -14,7 +16,7 @@ const Questionnaire = () => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://127.0.0.1:8000/questionnaire');
+        const response = await axios.get(`${API_BASE_URL}/api/questionnaire`);
         setMovies(response.data.movies);
         setLoading(false);
       } catch (err) {
@@ -42,7 +44,7 @@ const Questionnaire = () => {
         rating: parseFloat(rating),
       }));
 
-      await axios.post('http://127.0.0.1:8000/submit-ratings', {
+      await axios.post(`${API_BASE_URL}/api/submit-ratings`, {
         user_id: userId,
         ratings: formattedRatings,
       });

@@ -1,46 +1,140 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Typography, Button, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import {
+  Container,
+  Typography,
+  Box,
+  TextField,
+  Button,
+  Alert,
+  Paper,
+  Tabs,
+  Tab,
+} from '@mui/material';
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:3001';
 
 const Home = () => {
+  const [tab, setTab] = useState(0);
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [registerData, setRegisterData] = useState({ username: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleTabChange = (event, newValue) => {
+    setTab(newValue);
+    setError('');
+  };
+
+  const handleInputChange = (e, type) => {
+    const { name, value } = e.target;
+    if (type === 'login') {
+      setLoginData((prev) => ({ ...prev, [name]: value }));
+    } else {
+      setRegisterData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, loginData);
+      localStorage.setItem('token', response.data.token); // Save token to localStorage
+      navigate('/dashboard'); // Redirect to the dashboard
+    } catch (err) {
+      setError('Failed to log in. Please check your credentials.');
+    }
+  };
+
+  const handleRegister = async () => {
+    try {
+      await axios.post(`${API_BASE_URL}/api/auth/register`, registerData);
+      setError('Registration successful! Please log in.');
+      setTab(0); // Switch to the login tab
+    } catch (err) {
+      setError('Failed to register. Please try again.');
+    }
+  };
+
   return (
-    <Container maxWidth="md" style={{ textAlign: 'center', padding: '20px' }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h2" component="h1" color="primary" gutterBottom>
-          Welcome to AI-Powered MovieMatch!
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
-          Your personalized movie recommendation platform.
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          component={Link}
-          to="/questionnaire"
-          sx={{
-            padding: '10px 20px',
-            fontSize: '1rem',
-          }}
-        >
-          Start Questionnaire
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="large"
-          component={Link}
-          to="/recommendations"
-          sx={{
-            padding: '10px 20px',
-            fontSize: '1rem',
-          }}
-        >
-          View Recommendations
-        </Button>
-      </Box>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h3" component="h1" color="primary" align="center" gutterBottom>
+        Welcome to AI-Powered MovieMatch!
+      </Typography>
+      <Typography variant="body1" color="textSecondary" align="center" gutterBottom>
+        Your personalized movie recommendation platform.
+      </Typography>
+
+      <Paper elevation={3} sx={{ mt: 4, p: 3 }}>
+        <Tabs value={tab} onChange={handleTabChange} centered>
+          <Tab label="Log In" />
+          <Tab label="Register" />
+        </Tabs>
+
+        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+
+        {tab === 0 && (
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              label="Username"
+              name="username"
+              fullWidth
+              margin="normal"
+              value={loginData.username}
+              onChange={(e) => handleInputChange(e, 'login')}
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={loginData.password}
+              onChange={(e) => handleInputChange(e, 'login')}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleLogin}
+              sx={{ mt: 2 }}
+            >
+              Log In
+            </Button>
+          </Box>
+        )}
+
+        {tab === 1 && (
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              label="Username"
+              name="username"
+              fullWidth
+              margin="normal"
+              value={registerData.username}
+              onChange={(e) => handleInputChange(e, 'register')}
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={registerData.password}
+              onChange={(e) => handleInputChange(e, 'register')}
+            />
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              onClick={handleRegister}
+              sx={{ mt: 2 }}
+            >
+              Register
+            </Button>
+          </Box>
+        )}
+      </Paper>
     </Container>
   );
 };

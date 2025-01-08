@@ -13,6 +13,9 @@ import {
   Paper,
 } from '@mui/material';
 
+// Fetch the base URL from environment variables for flexibility
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:3001';
+
 const Recommendations = () => {
   const [userId, setUserId] = useState('');
   const [topN, setTopN] = useState(5); // Default to 5 recommendations
@@ -25,14 +28,37 @@ const Recommendations = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await axios.post('http://127.0.0.1:8000/recommendations', {
-        user_id: parseInt(userId),
-        top_n: parseInt(topN),
-      });
+
+      // Retrieve token from localStorage or sessionStorage
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        setError('You are not logged in. Please log in to access recommendations.');
+        setLoading(false);
+        return;
+      }
+
+      const response = await axios.post(
+        `${API_BASE_URL}/api/recommendations`,
+        {
+          user_id: parseInt(userId, 10),
+          top_n: parseInt(topN, 10),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token in the Authorization header
+          },
+        }
+      );
+
       setRecommendations(response.data.recommendations);
-      setLoading(false);
     } catch (err) {
-      setError('Failed to fetch recommendations. Please check your input.');
+      if (err.response && err.response.status === 401) {
+        setError('Unauthorized. Please log in again.');
+      } else {
+        setError('Failed to fetch recommendations. Please check your input.');
+      }
+    } finally {
       setLoading(false);
     }
   };
