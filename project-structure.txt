@@ -1,11 +1,92 @@
 .
 ├── Procfile
 ├── README.md
+├── client
+│   ├── README.md
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── logo192.png
+│   │   ├── logo512.png
+│   │   ├── manifest.json
+│   │   └── robots.txt
+│   └── src
+│       ├── App.css
+│       ├── App.js
+│       ├── App.test.js
+│       ├── components
+│       │   ├── Dashboard.js
+│       │   ├── Footer.css
+│       │   ├── Footer.js
+│       │   ├── Home.css
+│       │   ├── Home.js
+│       │   ├── Login.js
+│       │   ├── Navbar.css
+│       │   ├── Navbar.js
+│       │   ├── Questionnaire.css
+│       │   ├── Questionnaire.js
+│       │   ├── Recommendations.css
+│       │   ├── Recommendations.js
+│       │   └── Register.js
+│       ├── index.css
+│       ├── index.js
+│       ├── logo.svg
+│       ├── serviceWorker.js
+│       ├── services
+│       │   └── api.js
+│       ├── setupTests.js
+│       └── theme.js
 ├── config
 │   └── db.js
 ├── controllers
 │   ├── authController.js
 │   └── recommendationController.js
+├── data
+│   └── ml-latest-small
+│       ├── 2019 movies.csv
+│       ├── 2020 movies.csv
+│       ├── 2021 movies.csv
+│       ├── 2022 movies.csv
+│       ├── 2023 movies.csv
+│       ├── 2024 movies.csv
+│       ├── README.txt
+│       ├── filtered_ratings.csv
+│       ├── links.csv
+│       ├── movies.csv
+│       ├── moviesupdated.csv
+│       ├── questionnaire_movies.csv
+│       ├── ratings.csv
+│       ├── ratingsupdated.csv
+│       ├── tags.csv
+│       ├── user_movie_matrix copy.csv
+│       ├── user_movie_matrix_test.csv
+│       ├── user_movie_table copy 2.csv
+│       ├── user_movie_table copy.csv
+│       └── user_movie_table.csv
+├── env
+│   ├── bin
+│   │   ├── Activate.ps1
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── f2py
+│   │   ├── fastapi
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.12
+│   │   ├── python -> python3.12
+│   │   ├── python3 -> python3.12
+│   │   ├── python3.12 -> /Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12
+│   │   ├── surprise
+│   │   └── uvicorn
+│   ├── include
+│   │   └── python3.12
+│   ├── lib
+│   │   └── python3.12
+│   │       └── site-packages
+│   └── pyvenv.cfg
 ├── index.js
 ├── middlewares
 │   └── authMiddleware.js
@@ -13,12 +94,21 @@
 │   ├── Movie.js
 │   ├── Rating.js
 │   ├── Recommendation.js
-│   └── User.js
+│   ├── User.js
+│   ├── best_svd_model.pkl
+│   └── trained_svd_model.pkl
 ├── package-lock.json
 ├── package.json
 ├── project-structure.txt
-└── routes
-    ├── authRoutes.js
-    └── recommendationRoutes.js
+├── requirements.txt
+├── routes
+│   ├── authRoutes.js
+│   ├── questionnaireRoutes.js
+│   └── recommendationRoutes.js
+└── scripts
+    └── __pycache__
+        ├── add_questionnaire_endpoint.cpython-312.pyc
+        ├── collect_ratings.cpython-312.pyc
+        └── recommendation_api.cpython-312.pyc
 
-6 directories, 16 files
+22 directories, 90 files

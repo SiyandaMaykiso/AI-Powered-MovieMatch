@@ -11,7 +11,7 @@ const register = async (req, res) => {
         // Use the User model to create a new user
         const user = await User.createUser(username, hashedPassword);
 
-        res.json(user);
+        res.json({ message: 'User registered successfully', user });
     } catch (err) {
         console.error('Error registering user:', err);
         res.status(500).json({ error: 'Failed to register user' });
@@ -27,7 +27,12 @@ const login = async (req, res) => {
         if (user && (await bcrypt.compare(password, user.password))) {
             // Generate a JWT token
             const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-            res.json({ token });
+
+            // Include the user_id in the response
+            res.json({
+                token,
+                user_id: user.id, // Send user ID directly
+            });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }

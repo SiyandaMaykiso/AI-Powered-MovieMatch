@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   Container,
   Typography,
-  TextField,
-  Button,
   CircularProgress,
   Alert,
   List,
@@ -13,93 +11,65 @@ import {
   Paper,
 } from '@mui/material';
 
-// Fetch the base URL from environment variables for flexibility
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:3001';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8001';
 
 const Recommendations = () => {
-  const [userId, setUserId] = useState('');
-  const [topN, setTopN] = useState(5); // Default to 5 recommendations
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Fetch recommendations from the backend
-  const fetchRecommendations = async () => {
-    try {
-      setLoading(true);
-      setError('');
+  // Automatically fetch recommendations when the component mounts
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        setLoading(true);
+        setError('');
 
-      // Retrieve token from localStorage or sessionStorage
-      const token = localStorage.getItem('token');
+        // Retrieve the JWT token and user ID from localStorage
+        const token = localStorage.getItem('token');
+        const userId = parseInt(localStorage.getItem('user_id'), 10);
 
-      if (!token) {
-        setError('You are not logged in. Please log in to access recommendations.');
-        setLoading(false);
-        return;
-      }
-
-      const response = await axios.post(
-        `${API_BASE_URL}/api/recommendations`,
-        {
-          user_id: parseInt(userId, 10),
-          top_n: parseInt(topN, 10),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token in the Authorization header
-          },
+        if (!token || isNaN(userId)) {
+          setError('You are not logged in. Please log in to access recommendations.');
+          setLoading(false);
+          return;
         }
-      );
 
-      setRecommendations(response.data.recommendations);
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setError('Unauthorized. Please log in again.');
-      } else {
-        setError('Failed to fetch recommendations. Please check your input.');
+        // Make the API call to fetch recommendations
+        const response = await axios.post(
+          `${API_BASE_URL}/api/recommendations`,
+          { user_id: userId, top_n: 5 }, // Include user_id and top_n in the payload
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+            },
+          }
+        );
+
+        // Set the recommendations state with the API response
+        setRecommendations(response.data.recommendations);
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          setError('Unauthorized. Please log in again.');
+        } else if (err.response && err.response.status === 422) {
+          setError('Invalid request data. Please try again.');
+        } else {
+          setError('Failed to fetch recommendations. Please try again later.');
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    // Trigger the fetchRecommendations function on component mount
+    fetchRecommendations();
+  }, []);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Get Movie Recommendations
+        Your Movie Recommendations
       </Typography>
-
-      {/* User Input Form */}
-      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-        <TextField
-          label="User ID"
-          type="number"
-          fullWidth
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          placeholder="Enter your User ID"
-          margin="normal"
-        />
-        <TextField
-          label="Number of Recommendations"
-          type="number"
-          fullWidth
-          value={topN}
-          onChange={(e) => setTopN(e.target.value)}
-          placeholder="Enter number of recommendations"
-          margin="normal"
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={fetchRecommendations}
-          disabled={loading}
-          sx={{ mt: 2 }}
-        >
-          Get Recommendations
-        </Button>
-      </Paper>
 
       {/* Loading State */}
       {loading && (

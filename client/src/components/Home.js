@@ -20,11 +20,13 @@ const Home = () => {
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [registerData, setRegisterData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
     setError('');
+    setSuccess('');
   };
 
   const handleInputChange = (e, type) => {
@@ -38,20 +40,29 @@ const Home = () => {
 
   const handleLogin = async () => {
     try {
+      setError('');
       const response = await axios.post(`${API_BASE_URL}/api/auth/login`, loginData);
-      localStorage.setItem('token', response.data.token); // Save token to localStorage
-      navigate('/dashboard'); // Redirect to the dashboard
+      // Save token and user_id to localStorage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user_id', response.data.user_id);
+
+      // Redirect to the dashboard
+      navigate('/dashboard');
     } catch (err) {
+      console.error('Login error:', err.response ? err.response.data : err.message);
       setError('Failed to log in. Please check your credentials.');
     }
   };
 
   const handleRegister = async () => {
     try {
+      setError('');
+      setSuccess('');
       await axios.post(`${API_BASE_URL}/api/auth/register`, registerData);
-      setError('Registration successful! Please log in.');
+      setSuccess('Registration successful! Please log in.');
       setTab(0); // Switch to the login tab
     } catch (err) {
+      console.error('Registration error:', err.response ? err.response.data : err.message);
       setError('Failed to register. Please try again.');
     }
   };
@@ -72,6 +83,7 @@ const Home = () => {
         </Tabs>
 
         {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+        {success && <Alert severity="success" sx={{ mt: 2 }}>{success}</Alert>}
 
         {tab === 0 && (
           <Box sx={{ mt: 2 }}>

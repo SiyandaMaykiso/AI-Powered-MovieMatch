@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, TextField, Button, Typography, Alert, Box } from '@mui/material';
 
+// Use the correct base URL for the backend
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:3001';
 
 const Login = () => {
@@ -17,11 +18,15 @@ const Login = () => {
         username,
         password,
       });
-      // Save the token
+
+      // Save the token and user_id in localStorage
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user_id', response.data.user_id);
+
       // Redirect to Dashboard
       navigate('/dashboard');
     } catch (err) {
+      console.error('Login Error:', err.response ? err.response.data : err.message);
       setError('Login failed. Please check your credentials.');
     }
   };
@@ -48,7 +53,13 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           margin="normal"
         />
-        <Button variant="contained" color="primary" fullWidth onClick={handleLogin} sx={{ mt: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleLogin}
+          sx={{ mt: 2 }}
+        >
           Log In
         </Button>
       </Box>
